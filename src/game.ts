@@ -2,6 +2,16 @@
  * - 「あかあげて」
  * - 出題から1秒後に判定
  */
+
+/** 姿勢推定のしきい値。高いほど厳しくなる */
+const SCORE_THRESHOLD = 0.5;
+
+/** 出題から判定までの待ち時間 */
+const JUDGE_WAIT_SECONDS = 2;
+
+/** 姿勢をこの秒数保ったらその姿勢になったとする */
+const POSE_KEEP_SECONDS = 0.5;
+
 let prevPose = [false, false];
 let poseStartTime = 0;
 let questionStartTime = 0;
@@ -13,7 +23,7 @@ type GameState = {
 }
 
 export let gameState: GameState = {
-  question: 'あかあげて'
+  question: ''
 }
 
 export function onPoseDetected(poses) {
@@ -23,7 +33,6 @@ export function onPoseDetected(poses) {
   const leftWrist = keypoints[15];
   const rightWrist = keypoints[16];
 
-  const SCORE_THRESHOLD = 0.5;
   const isLeftValid = leftWrist.score >= SCORE_THRESHOLD;
   const isRightValid = rightWrist.score >= SCORE_THRESHOLD;
   if (prevPose[0] === isLeftValid && prevPose[1] === isRightValid) {
@@ -38,9 +47,9 @@ export function onPoseDetected(poses) {
     makeQuestion();
   }
 
-  if (questionStartTime + 2000 < Date.now()) {
+  if (questionStartTime + JUDGE_WAIT_SECONDS * 1000 < Date.now()) {
     // 出題から一定時間が経過したので、判定開始
-    if (poseStartTime + 1000 < Date.now()) {
+    if (poseStartTime + POSE_KEEP_SECONDS * 1000 < Date.now()) {
       if (answerPose[0] === prevPose[0] && answerPose[1] === prevPose[1]) {
         // 正解！
         soundCorrect.pause();
@@ -56,6 +65,7 @@ export function onPoseDetected(poses) {
 function makeQuestion() {
   const randomHand = Math.random();
   const randomFlag = Math.random();
+
   if (randomHand < 0.5) {
     // あか
     if (randomFlag < 0.7) {
@@ -64,7 +74,7 @@ function makeQuestion() {
     } else {
       gameState.question = answerPose[0] ? 'あかさげないで' : 'あかあげないで';
     }
-  } else if (randomHand < 1.1) {
+  } else {
     // しろ
     if (randomFlag < 0.7) {
       answerPose[1] = !answerPose[1];
@@ -72,9 +82,8 @@ function makeQuestion() {
     } else {
       gameState.question = answerPose[1] ? 'しろさげないで' : 'しろあげないで';
     }
-  } else {
-    // あかしろ
   }
+  // あかしろあげて、などは未実装
 
   const utter = new SpeechSynthesisUtterance(gameState.question);
   utter.lang = 'ja';
