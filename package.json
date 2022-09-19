@@ -11,6 +11,17 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "parcel": "^2.7.0"
+    "buffer": "^6.0.3",
+    "parcel": "^2.7.0",
+    "process": "^0.11.10"
+  },
+  "dependencies": {
+    "@mediapipe/pose": "^0.4.1633558788",
+    "@tensorflow-models/pose-detection": "^2.0.0",
+    "@tensorflow/tfjs-backend-wasm": "^3.20.0",
+    "@tensorflow/tfjs-backend-webgl": "^3.20.0",
+    "@tensorflow/tfjs-converter": "^3.20.0",
+    "@tensorflow/tfjs-core": "^3.20.0",
+    "scatter-gl": "^0.0.13"
   }
 }
