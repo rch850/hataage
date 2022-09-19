@@ -95,7 +95,7 @@ export class Camera {
 
         await new Promise((resolve) => {
             camera.video.onloadedmetadata = () => {
-                resolve(video);
+                resolve(1);
             };
         });
 
@@ -109,7 +109,7 @@ export class Camera {
 
         camera.canvas.width = videoWidth;
         camera.canvas.height = videoHeight;
-        const canvasContainer = document.querySelector('.canvas-wrapper');
+        const canvasContainer = document.querySelector<HTMLDivElement>('.canvas-wrapper')!;
         canvasContainer.style = `width: ${videoWidth}px; height: ${videoHeight}px`;
 
         // Because the image from camera is mirrored, need to flip horizontally.

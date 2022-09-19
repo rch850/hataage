@@ -28,6 +28,7 @@ import * as posedetection from '@tensorflow-models/pose-detection';
 import { Camera } from './camera';
 import { STATE } from './params';
 import { setBackendAndEnvFlags } from './util';
+import { gameState, onPoseDetected } from './game';
 
 let camera: Camera;
 let detector: posedetection.PoseDetector | undefined;
@@ -69,7 +70,7 @@ async function renderResult() {
         { maxPoses: STATE.modelConfig.maxPoses, flipHorizontal: false });
     } catch (error) {
       detector.dispose();
-      detector = null;
+      detector = undefined;
       alert(error);
     }
   }
@@ -81,14 +82,16 @@ async function renderResult() {
   // which shouldn't be rendered.
   if (poses && poses.length > 0 && !STATE.isModelChanged) {
     camera.drawResults(poses);
+
+    console.log(onPoseDetected(poses));
   }
 }
 
 async function renderPrediction() {
   await renderResult();
+  document.querySelector<HTMLHeadingElement>('h1')!.innerHTML = gameState.question;
   rafId = requestAnimationFrame(renderPrediction);
 };
-
 
 async function app() {
   camera = await Camera.setupCamera(STATE.camera);
