@@ -89,7 +89,10 @@ async function renderResult() {
 
 async function renderPrediction() {
   await renderResult();
-  document.querySelector<HTMLHeadingElement>('h1')!.innerHTML = gameState.question;
+  const el = document.querySelector<HTMLElement>('#question')!
+  if (el.textContent !== gameState.question) {
+    el.textContent = gameState.question;
+  }
   rafId = requestAnimationFrame(renderPrediction);
 };
 

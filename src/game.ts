@@ -1,6 +1,7 @@
 /*
  * - 「あかあげて」
- * - 出題から1秒後に判定
+ * - 出題から一定時間後に判定
+ * - 一定時間姿勢を保っていないと判定しない
  */
 
 /** 姿勢推定のしきい値。高いほど厳しくなる */
@@ -67,20 +68,20 @@ function makeQuestion() {
   const randomFlag = Math.random();
 
   if (randomHand < 0.5) {
-    // あか
-    if (randomFlag < 0.7) {
-      answerPose[0] = !answerPose[0];
-      gameState.question = answerPose[0] ? 'あかあげて' : 'あかさげて';
-    } else {
-      gameState.question = answerPose[0] ? 'あかさげないで' : 'あかあげないで';
-    }
-  } else {
     // しろ
     if (randomFlag < 0.7) {
-      answerPose[1] = !answerPose[1];
-      gameState.question = answerPose[1] ? 'しろあげて' : 'しろさげて';
+      answerPose[0] = !answerPose[0];
+      gameState.question = answerPose[0] ? 'しろあげて' : 'しろさげて';
     } else {
-      gameState.question = answerPose[1] ? 'しろさげないで' : 'しろあげないで';
+      gameState.question = answerPose[0] ? 'しろさげないで' : 'しろあげないで';
+    }
+  } else {
+    // あか
+    if (randomFlag < 0.7) {
+      answerPose[1] = !answerPose[1];
+      gameState.question = answerPose[1] ? 'あかあげて' : 'あかさげて';
+    } else {
+      gameState.question = answerPose[1] ? 'あかさげないで' : 'あかあげないで';
     }
   }
   // あかしろあげて、などは未実装
