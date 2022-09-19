@@ -6,6 +6,7 @@ let prevPose = [false, false];
 let poseStartTime = 0;
 let questionStartTime = 0;
 let answerPose = [false, false];
+let soundCorrect = document.querySelector<HTMLAudioElement>('#sound-correct')!;
 
 type GameState = {
   question: string
@@ -41,9 +42,12 @@ export function onPoseDetected(poses) {
     // 出題から一定時間が経過したので、判定開始
     if (poseStartTime + 1000 < Date.now()) {
       if (answerPose[0] === prevPose[0] && answerPose[1] === prevPose[1]) {
+        // 正解！
+        soundCorrect.pause();
+        soundCorrect.currentTime = 0;
+        soundCorrect.play();
         makeQuestion();
         questionStartTime = Date.now();
-        poseKeepCount = 0;
       }
     }
   }
@@ -71,4 +75,8 @@ function makeQuestion() {
   } else {
     // あかしろ
   }
+
+  const utter = new SpeechSynthesisUtterance(gameState.question);
+  utter.lang = 'ja';
+  speechSynthesis.speak(utter);
 }
