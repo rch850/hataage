@@ -1,14 +1,15 @@
 {
-  "name": "tfjs-pose-detection",
+  "name": "hataage",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "source": "src/index.html",
   "scripts": {
     "start": "parcel",
-    "build": "parcel build"
+    "build": "parcel build --public-url ./",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
-  "author": "",
+  "author": "rch850 <rich850@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "buffer": "^6.0.3",
